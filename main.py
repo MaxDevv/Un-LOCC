@@ -14,18 +14,8 @@ from PIL import Image, ImageDraw, ImageFont
 from openai import OpenAI
 
 # --- CONFIGURATION ---
-# It is recommended to set your OpenRouter API key as an environment variable.
-# Example: export OPENROUTER_API_KEY="sk-or-..."
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-if not OPENROUTER_API_KEY:
-    print("Warning: OPENROUTER_API_KEY environment variable not set. Using a placeholder.")
-    OPENROUTER_API_KEY = "sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-# Initialize the OpenAI client to point to the OpenRouter API endpoint.
-client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key=OPENROUTER_API_KEY,
-)
+# OpenRouter API key can be provided via command line or environment variable
+client = None
 
 # --- CORE METHODOLOGY FUNCTIONS ---
 
@@ -111,7 +101,7 @@ def _wrap_text(text, font, max_width):
     lines.append(current_line)
     return lines
 
-def query_llm_for_code(image_path, model_id):
+def query_llm_for_code(image_path, model_id, client):
     """Sends the generated image to a VLM via OpenRouter and returns the response."""
     try:
         with open(image_path, "rb") as image_file:
@@ -191,7 +181,7 @@ def generate_image(text, font_path, font_size, size, padding):
 
 # --- MAIN EXECUTION LOGIC ---
 
-def run_experiment(args):
+def run_experiment(args, client):
     """
     Main function to run the O-NIH experiment based on command-line arguments.
     """
@@ -250,7 +240,7 @@ def run_experiment(args):
         print(f"  - Image generated at: {image_path}")
         
         start_time = time.time()
-        llm_response = query_llm_for_code(image_path, args.model_id)
+        llm_response = query_llm_for_code(image_path, args.model_id, client)
         duration = time.time() - start_time
         print(f"  - LLM responded in {duration:.2f}s")
         
@@ -275,21 +265,27 @@ if __name__ == "__main__":
     )
     
     parser.add_argument(
-        "--model_id", 
-        type=str, 
-        default="qwen/qwen2.5-vl-72b-instruct", 
+        "--api_key",
+        type=str,
+        default=None,
+        help="OpenRouter API key. If not provided, will use OPENROUTER_API_KEY environment variable."
+    )
+    parser.add_argument(
+        "--model_id",
+        type=str,
+        default="qwen/qwen2.5-vl-72b-instruct",
         help="The OpenRouter model ID to test (e.g., 'google/gemini-2.5-flash')."
     )
     parser.add_argument(
         "--font_path", 
-        type=str, 
-        required=True, 
+        type=str,
+        default="fonts/AtkinsonHyperlegible-Regular.ttf", 
         help="Path to the .ttf font file to use for rendering."
     )
     parser.add_argument(
         "--font_size", 
         type=int, 
-        required=True, 
+        default=14,
         help="The fixed font size (in pixels) to render the text with."
     )
     parser.add_argument(
@@ -329,8 +325,24 @@ if __name__ == "__main__":
     # Convert size to a tuple
     args.size = tuple(args.size)
     
+    # Initialize OpenRouter client
+    OPENROUTER_API_KEY = None
+    if args.api_key:
+        OPENROUTER_API_KEY = args.api_key
+    else:
+        OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+
+    if not OPENROUTER_API_KEY:
+        print("Error: OpenRouter API key not found. Please provide via --api_key or set OPENROUTER_API_KEY environment variable.")
+        exit()
+
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=OPENROUTER_API_KEY,
+    )
+    
     try:
-        run_experiment(args)
+        run_experiment(args, client)
     except FileNotFoundError as e:
         print(f"\n[ERROR] A required file was not found: {e}")
     except Exception as e:
