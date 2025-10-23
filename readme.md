@@ -11,7 +11,7 @@ The quadratic computational complexity of the Transformer attention mechanism ma
 
 ## Key Results
 
-Analysis of over 70 experiments reveals that different models have unique "sweet spots" for optical compression. However, a general trend emerges: high-fidelity compression is achievable across multiple state-of-the-art VLMs.
+Analysis of over 90 experiments reveals that different models have unique "sweet spots" for optical compression. However, a general trend emerges: high-fidelity compression is achievable across multiple state-of-the-art VLMs.
 
 
 ![Fig-1](fig-1.png)
