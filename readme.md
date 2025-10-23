@@ -1,6 +1,9 @@
 # Un-LOCC: Universal Lossy Optical Context Compression for Vision-Based Language Models
 
 ### Achieve nearly 3x token compression at over 93% retrieval accuracy using existing Vision-Language Models.
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=MaxDevv/Un-LOCC&type=date&legend=top-left)](https://www.star-history.com/#MaxDevv/Un-LOCC&type=date&legend=top-left)
 
 ## Abstract
 
@@ -8,7 +11,7 @@ The quadratic computational complexity of the Transformer attention mechanism ma
 
 ## Key Results
 
-Analysis of over 70 experiments reveals that different models have unique "sweet spots" for optical compression. However, a general trend emerges: high-fidelity compression is achievable across multiple state-of-the-art VLMs.
+Analysis of over 90 experiments reveals that different models have unique "sweet spots" for optical compression. However, a general trend emerges: high-fidelity compression is achievable across multiple state-of-the-art VLMs.
 
 
 ![Fig-1](fig-1.png)
