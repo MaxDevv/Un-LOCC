@@ -3,7 +3,7 @@
 ### Achieve nearly 3x token compression at over 93% retrieval accuracy using existing Vision-Language Models.
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=MaxDevv/Un-LOCC&type=date&legend=top-left)](https://www.star-history.com/#MaxDevv/Un-LOCC&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=MaxDevv/Un-LOCC&type=date&legend=top-left)](https://www.star-history.com/#MaxDevv/Un-LOCC&type=date&legend=top-left) 
 
 ## Abstract
 
